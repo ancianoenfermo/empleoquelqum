@@ -1,0 +1,14 @@
+.quelqum-headers {
+    background-color: rgba(216,41,146,0.40) !important;
+}
+.quelqum-text{
+    color: rgba(216,41,146,1);
+    font-weight: bold;
+}
+.quelqum-background {
+    background-color: #F8FAFC ;
+}
+.space-letter {
+    letter-spacing: 0.0625em; 
+}
+
