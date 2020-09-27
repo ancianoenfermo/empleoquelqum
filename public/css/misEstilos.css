@@ -1,6 +1,12 @@
 .quelqum-headers {
-    background-color: rgba(216,41,146,0.40) !important;
+    background-color: rgba(240,169,211) !important;
 }
+.quelqum-headers2 {
+    background-color: rgba(216,41,146,0.1) !important;
+}
+
+
+
 .quelqum-text{
     color: rgba(216,41,146,1);
     font-weight: bold;
@@ -11,4 +17,23 @@
 .space-letter {
     letter-spacing: 0.0625em; 
 }
+.quelqum-h2 {
+    font-size: 18px !important;
+ }
+ .border-3 {
+    border-width:10px !important;
+    border-color:  rgba(216,41,146,0.1) !important;
+}
+.borderQ-2 {
+    border-width:4px !important;
+    border-color:  rgba(216,41,146,0.1) !important;
+}
+.page-link {
+    border-color:rgba(216,41,146) !important;
+    color: rgba(216,41,146) !important;
+}
 
+.page-item.active .page-link {
+    background-color: rgba(216,41,146) !important;
+    color:white !important;
+}

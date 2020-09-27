@@ -26,7 +26,8 @@ class EmpleoPrivadoController extends Controller
         foreach ($columns as $column) {
             if(request()->has($column)) {
                 if (request($column)!=0) {
-                    $ofertas = $ofertas->where($column, request($column));
+                    $ofertas = $ofertas
+                    ->where($column, request($column));
                     $queries[$column] = request($column);
                 }
             } 
@@ -44,7 +45,7 @@ class EmpleoPrivadoController extends Controller
         }
         $fuentes = Fuente::get();
         
-        $ofertas = $ofertas->paginate()->appends($queries);
+        $ofertas = $ofertas->orderby('fecha','DESC')->paginate()->appends($queries);
        
         return view('empleoPrivado',compact('ofertas','localidades','provincias','oldProvincia','oldFuente','oldLocalidad','fuentes'));
         

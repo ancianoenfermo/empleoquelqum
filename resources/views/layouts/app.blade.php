@@ -14,7 +14,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> -->
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -65,7 +65,91 @@
                     </div>
                     
                 </div>
-            </div>  
+            </div> 
+            
+                 <!-- Seleccion -->
+       <div class="row pb-3 quelqum-headers ">
+        <div class="col-md-3">
+
+        </div>
+
+        <div class="col-md-2">
+            <div class="card border-0 quelqum-headers">
+                <label class="pl-2 quelqum-text quelqum-headers text-center ">Provincia</label>
+               
+                
+                <select class="form-control form-control-sm" id="provincia" name = "provincia">
+                    
+                    <option value="">Todas</option>
+                    @foreach ($provincias as $provincia)        
+                        <option value="{{$provincia->id}}"
+                            @isset($oldProvincia) 
+                                @if($oldProvincia == $provincia->id)
+                                    selected
+                                @endif
+                            @endisset
+                            >
+                            {{$provincia->name}} 
+                        </option>
+                    @endforeach
+
+                </select>
+            </div>
+        </div>  
+        
+        
+
+
+        
+        <div class="col-md-2">    
+            <div class="card quelqum-headers border-0 ">
+                <label class="pl-2  quelqum-text text-center" >Localidad</label>
+                
+                <select id="localidad" name = "localidad" class="form-control form-control-sm ">
+                    
+                    <option value="">Todas</option>
+                        @foreach($localidades as $localidad)
+                            <option value="{{$localidad->id}}"
+                                @isset($oldLocalidad) 
+                                    @if($oldLocalidad == $localidad->id)
+                                        selected
+                                    @endif
+                                @endisset
+                                >{{$localidad->name}} 
+                            </option>
+                        @endforeach
+                </select>
+            </div>
+
+        </div>
+
+        <div class="col-md-2">    
+            <div class="card quelqum-headers border-0 ">
+                <label class="pl-2 quelqum-text quelqum-headers text-center ">Fuente</label>
+                <select id="fuente" name = "fuente" class="form-control form-control-sm ">
+                    <option value="">Todas</option>
+                        @foreach($fuentes as $fuente)
+                            <option value="{{$fuente->id}}"
+                                @isset($oldFuente) 
+                                    @if($oldFuente == $fuente->id)
+                                        selected
+                                    @endif
+                                @endisset
+                                >{{$fuente->name}} 
+                            </option>
+                        @endforeach
+                </select>
+            </div>
+
+        </div> 
+        <div class="col-md-3">
+          
+        </div>
+        
+    </div>  
+
+       <!-- End Selección -->  
+            
         </div>
     </header>
     <article>
@@ -120,6 +204,7 @@
 
             </div>
        </div>
+
       </div>
     </footer>
 

@@ -74,8 +74,8 @@ class ScrapingController extends Controller
             echo 'Excepción capturada en generar BD: ',  $e->getMessage(), "\n";
         }
 
-       /*  $totalOfertasAytoCoru = $this->ayuntamientoCor(); */
-        print_r($totalOfertasEmpleo);
+       /*  $totalOfertasAytoCoru = $this->ayuntamientoCor();
+        print_r($totalOfertasEmpleo); */
        
         
        
@@ -326,25 +326,31 @@ class ScrapingController extends Controller
             $existeOferta= $crawler->filter('li.listadoOfertaTrabajo');
             
             if ($existeOferta->count() == 0) {
+                echo 'noexiste'.$i.'<br>';
                 break;
             }
+            
             $urlsOfertas =  $existeOferta->each(function (Crawler $ofertahtlm) {
                 $urls = [];
+                
+                
                 $t1 = $ofertahtlm->children()->filter('p.fecha'); 
                 if ($t1->count() == 0)  {
                     return;
                 }
                 $urls['fecha'] = $t1->text(); 
-
+                
                 $t1 = $ofertahtlm->children()->filter('p.lugar_solicitud'); 
                 if ($t1->count() == 0)  {
                     $urls['localidad'] ='CORUÑA, A';
-                    return;
+                } else {
+                    $urls['localidad'] = $this->trataLocalidad($t1->text()); 
                 }
-                $urls['localidad'] = $this->trataLocalidad($t1->text()); 
                 
                 $t1 = $ofertahtlm->children()->filter('a');
                 $urls['titulo'] = $t1->text();
+                echo $urls['titulo'].'<br>';
+                
                 $urls['url'] = $t1->extract(['href'])[0];
                 //echo basename($urls['url'].'<br>');
                 return $urls;
@@ -353,8 +359,9 @@ class ScrapingController extends Controller
            
             $totalUrls = array_merge($totalUrls,$urlsOfertas); 
         }
-        $result = array_filter($totalUrls);   
         
+        $result = array_filter($totalUrls);   
+       
         $totalOfertasAytoCor= [];
        
         
@@ -376,13 +383,12 @@ class ScrapingController extends Controller
             
            
             $fecha = $urlOferta['fecha'];
-    
+           
+            $fecha =str_replace(' de ', '-', $fecha);
             $fecha = $this->convierteFecha($fecha);       
             
             $fecha = strtotime($fecha);
-           
             $oferta['fecha'] = date('Y-m-d', $fecha);
-
             
             $oferta['localidad'] = $urlOferta['localidad'];
 
