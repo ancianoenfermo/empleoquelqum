@@ -17,5 +17,8 @@ class Empleo extends Model
     public function localidad(){
         return $this->belongsTo(Localidad::class);
     }
+    public function fuente(){
+        return $this->belongsTo(Fuente::class);
+    }
 
 }

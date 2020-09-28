@@ -14,16 +14,16 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-DB::listen(function($query) {
+/* DB::listen(function($query) {
     var_dump($query->sql);
 });
-
-Route::get('/', function () {
+ */
+/* Route::get('/', function () {
     return view('welcome');
-});
+}); */
 
 
-Route::get('/empleoPrivado','EmpleoPrivadoController@index')->name('empleoPrivado');
+Route::get('/','EmpleoPrivadoController@index')->name('empleoPrivado');
 
 Auth::routes();
 

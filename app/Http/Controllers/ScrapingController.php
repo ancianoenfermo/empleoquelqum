@@ -326,7 +326,7 @@ class ScrapingController extends Controller
             $existeOferta= $crawler->filter('li.listadoOfertaTrabajo');
             
             if ($existeOferta->count() == 0) {
-                echo 'noexiste'.$i.'<br>';
+                
                 break;
             }
             
@@ -349,7 +349,7 @@ class ScrapingController extends Controller
                 
                 $t1 = $ofertahtlm->children()->filter('a');
                 $urls['titulo'] = $t1->text();
-                echo $urls['titulo'].'<br>';
+               
                 
                 $urls['url'] = $t1->extract(['href'])[0];
                 //echo basename($urls['url'].'<br>');

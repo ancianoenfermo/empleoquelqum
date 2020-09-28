@@ -44,7 +44,8 @@ function onFiltersChange() {
         return;
     }
 
-    var getPet = '/empleoPrivado?';
+   /*  var getPet = '/empleoPrivado?'; */
+   var getPet = '/?'
 
     if (provincia_id != '') {
         getPet = getPet.concat('&provincia_id=', provincia_id);
