@@ -40,12 +40,12 @@ function onFiltersChange() {
 
     if (provincia_id == '' && localidad_id == '' && fuente_id == '' ) {
        
-        location.href = '/empleoPrivado';
+        location.href = '/';
         return;
     }
 
    /*  var getPet = '/empleoPrivado?'; */
-   var getPet = '/?'
+var getPet = '/?'
 
     if (provincia_id != '') {
         getPet = getPet.concat('&provincia_id=', provincia_id);
