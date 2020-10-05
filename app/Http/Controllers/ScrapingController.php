@@ -7,13 +7,16 @@ use App\Empleo;
 use App\Fuente;
 use App\Localidad;
 use App\Provincia;
+use Carbon\Carbon;
 use Goutte\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\DomCrawler\Crawler;
 use League\CommonMark\Delimiter\Delimiter;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\CssSelector\Node\SelectorNode;
 
 class ScrapingController extends Controller
@@ -67,6 +70,12 @@ class ScrapingController extends Controller
             echo 'Excepción capturada en scraping Ayuntamiento Lugo: ',  $e->getMessage(), "\n";
         }  
 
+        try {
+            $totalOfertasAdecco = $this->adecco();
+            $totalOfertasEmpleo = array_merge($totalOfertasEmpleo, $totalOfertasAdecco);
+        } catch (Exception $e) {
+            echo 'Excepción capturada en scraping Adeco: ',  $e->getMessage(), "\n";
+        }  
     
         try {
             $this->storeDataBase($totalOfertasEmpleo);
@@ -74,8 +83,8 @@ class ScrapingController extends Controller
             echo 'Excepción capturada en generar BD: ',  $e->getMessage(), "\n";
         }
 
-       /*  $totalOfertasAytoCoru = $this->ayuntamientoCor();
-        print_r($totalOfertasEmpleo); */
+        //$totalOfertasEmpleo =$this->adecco();
+        
        
         
        
@@ -500,6 +509,107 @@ class ScrapingController extends Controller
         return  $totalOfertasAytoLugo;
     }
 
+    public function adecco() {
+        
+        $totalOfertasUrl = [];
+        $urlsProvincias = [
+            'Coruña' => 'https://www.adecco.es/ofertas-trabajo/l-coruna-espana?xy=43.3623%2C-8.4115',
+            'Lugo' => 'https://www.adecco.es/ofertas-trabajo/l-lugo-espana?xy=43.0097%2C-7.5568',
+            'Orense' => 'https://www.adecco.es/ofertas-trabajo/l-orense-espana?xy=42.3358%2C-7.8639',
+            'Pontevedra' => 'https://www.adecco.es/ofertas-trabajo/l-pontevedra-espana?xy=42.4299%2C-8.6446'
+        
+        ];
+       
+       
+        foreach($urlsProvincias as $key => $val) {
+            global $urlsProvincias;
+     
+            $client = new Client();
+            $crawler = $client->request('GET', $val); 
+            $ofertas = $crawler->filter('div.single-job');
+        
+            $GLOBALS['key'] = $key; 
+            
+            $datosOfertas =  $ofertas->each(function (Crawler $ofertahtlm) {
+                $oferta = [];
+               
+                $titulo = $ofertahtlm->filter('h2 > a');   
+                $oferta['titulo'] = $titulo->text();
+                $oferta['url'] = $titulo->extract(['href'])[0];
+                $oferta['provincia'] =$GLOBALS['key'];
+                return $oferta;
+            });
+            
+            
+            $totalOfertasUrl = array_merge($totalOfertasUrl,$datosOfertas);
+            
+        }
+        $carbon = new Carbon();
+        /* print_r($totalOfertasUrl); */
+        $totalOfertasAdecco = [];
+        foreach($totalOfertasUrl as $oferta) {
+            $datosOferta = [];
+            $datosOferta['titulo'] = $oferta['titulo'];
+            $datosOferta['provincia'] = $oferta['provincia'];
+            $datosOferta['url'] = $oferta['url'];
+            $datosOferta['fuente'] = "Adecco";
+
+            $client = new Client();
+            $crawler = $client->request('GET', $oferta['url']); 
+            
+            $pag = $crawler->filter('div.job-full');
+            
+            $datosOferta['localidad'] = $pag->filter('span[id=lblCity]')->text();
+            $datosOferta['vacantes'] = $pag->filter('span[id=ltMaxNumWebApplicants]')->text();
+            $i = 0;
+            while ($pag->filter('div.job--task-specifics > p')->eq($i)->text() == "") {
+                $i++;
+            }
+            
+            
+            $datosOferta['detalles'] = $this->trataDetallesAdecco($pag->filter('div.job--task-specifics > p')->eq($i)->text());
+            
+            $datosOferta['fecha'] = $carbon->now()->subDays(2)->format('d-m-Y');
+            
+           array_push($totalOfertasAdecco, $datosOferta);
+
+        }
+        return $totalOfertasAdecco;
+    }
+
+    public function trataDetallesAdecco($detalles) {
+        $pos = strpos($detalles, 'Requisitos');
+        if ($pos == 0) {
+            $pos = strlen($detalles);
+        }
+        $requiAndFunciones = substr($detalles,$pos + 10,999);
+        $general = substr($detalles,0,350).'...';
+       
+        $pos = strpos($requiAndFunciones,"Responsabilidades");
+        $requisitos = substr($requiAndFunciones,0,$pos);
+       
+        $pos = strpos($requiAndFunciones,'Responsabilidades');
+        $funciones = substr($requiAndFunciones,$pos + 17,999);
+        
+        if ($requisitos == "" && $funciones == "") {
+            return $general;
+        }
+        if ($requisitos != "" && $funciones != "") {
+            return $general.'<br><strong class="text-muted" >Requisitos: </strong>'.$requisitos.'<br>'.'<strong class="text-muted" >Funciones: </strong>'.$funciones;;
+        }
+
+        
+        if ($requisitos == "") {
+            return $general.'<br>'.'<strong class="text-muted" >Funciones: </strong>'.$funciones;
+        } else {
+            return $general.'<br><strong class="text-muted" >Requisitos: </strong>'.$requisitos;
+        }
+        
+       
+
+        //return '<strong class="text-muted" >Requisitos:</strong>'.$requisitos.'<br>'.'<strong class="text-muted" >Funciones:</strong>'.$funciones;
+    }
+
 
 
 
@@ -660,7 +770,11 @@ class ScrapingController extends Controller
         }
     }
 
-    
+ /* $form = $crawler->filter('form[id=formSearchJob]')->form();
+
+        $form->setValues(array('buscarTrabajo' => 'coruña'));
+        // dd($form->getPhpValues());
+        $crawler = $client->submit($form); */   
 
 
 

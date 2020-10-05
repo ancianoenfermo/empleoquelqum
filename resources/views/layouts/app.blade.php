@@ -69,9 +69,18 @@
             
                  <!-- Seleccion -->
        <div class="row pb-3 quelqum-headers ">
-        <div class="col-md-3">
-
+        <div class="col-md-2">
+            
         </div>
+        <div class="col-md-1">
+            <div class="loader-container" id='loader-container'>
+                <div class="loader"></div>
+                <div class="loader2"></div>
+           </div>
+        </div>
+
+        
+
 
         <div class="col-md-2">
             <div class="card border-0 quelqum-headers">

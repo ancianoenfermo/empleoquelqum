@@ -2,78 +2,7 @@
 @section('content') 
    <div class="container mt-2">
        
-        <!-- <div class="row mt-2">
-            <div class="col-md-4">
-                <div class="card border-0">
-                    <label class="pl-2 quelqum-text">Provincia</label>
-                   
-                    
-                    <select class="form-control form-control-sm" id="provincia" name = "provincia">
-                        
-                        <option value="">Todas</option>
-                        @foreach ($provincias as $provincia)        
-                            <option value="{{$provincia->id}}"
-                                @isset($oldProvincia) 
-                                    @if($oldProvincia == $provincia->id)
-                                        selected
-                                    @endif
-                                @endisset
-                                >
-                                {{$provincia->name}} 
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-            </div>  
-            
-            
-
-
-            
-            <div class="col-md-4 ">    
-                <div class="card border-0 ">
-                    <label class="pl-2  quelqum-text" >Localidad</label>
-                    
-                    <select id="localidad" name = "localidad" class="form-control form-control-sm ">
-                        
-                        <option value="">Todas</option>
-                            @foreach($localidades as $localidad)
-                                <option value="{{$localidad->id}}"
-                                    @isset($oldLocalidad) 
-                                        @if($oldLocalidad == $localidad->id)
-                                            selected
-                                        @endif
-                                    @endisset
-                                    >{{$localidad->name}} 
-                                </option>
-                            @endforeach
-                    </select>
-                </div>
-
-            </div>
-
-            <div class="col-md-4">    
-                <div class="card border-0 ">
-                    <label class="pl-2 quelqum-text">Fuente</label>
-                    <select id="fuente" name = "fuente" class="form-control form-control-sm ">
-                        <option value="">Todas</option>
-                            @foreach($fuentes as $fuente)
-                                <option value="{{$fuente->id}}"
-                                    @isset($oldFuente) 
-                                        @if($oldFuente == $fuente->id)
-                                            selected
-                                        @endif
-                                    @endisset
-                                    >{{$fuente->name}} 
-                                </option>
-                            @endforeach
-                    </select>
-                </div>
-
-            </div> 
-            
-        </div>   -->
+        
         <div class="row mb-2">
             <div class="col-md-12 mt-2">
                 <p class="d-inline font-italic">Total ofertas: </p><p class= "d-inline font-weight-bold ">{{$ofertas->total()}}</p>
@@ -88,7 +17,7 @@
 
     </div>
  
-   
+    
 
     <div class="container ">
         @foreach($ofertas as $oferta)
@@ -134,6 +63,7 @@
         <span class="pagination  justify-content-center">{{$ofertas->links()}}</span>  
     </div>
    
+
 
 @endSection
 

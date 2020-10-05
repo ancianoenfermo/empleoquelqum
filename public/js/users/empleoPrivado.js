@@ -1,5 +1,9 @@
 
-
+window.onload = function() {
+    var contenedor = document.getElementById('loader-container');
+    contenedor.style.visibility = 'hidden';
+    contenedor.style.opacity = '0';
+}
 
 $(function() {
    
@@ -32,14 +36,14 @@ function onSelectProvinciaChange() {
 }
 
 function onFiltersChange() {
-    console.log("paso");
+   
     const provincia_id = $('#provincia').val();
     const localidad_id = $('#localidad').val();
     const fuente_id = $('#fuente').val();
     
 
     if (provincia_id == '' && localidad_id == '' && fuente_id == '' ) {
-       
+        activaSpiner();
         location.href = '/';
         return;
     }
@@ -61,6 +65,7 @@ var getPet = '/?'
         getPet = getPet.concat('&fuente_id=', fuente_id);
         
     } 
+    activaSpiner();
 
     location.href = getPet;
 
@@ -69,7 +74,12 @@ var getPet = '/?'
 
 }
 
-
+function activaSpiner() {
+    var contenedor = document.getElementById('loader-container');
+    contenedor.style.visibility = 'visible';
+    contenedor.style.opacity = '1';
+    
+}
 
 
 
